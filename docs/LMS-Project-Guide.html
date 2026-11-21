@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LMS Project Guide — from basics to advanced</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 16mm 15mm; }
+  :root {
+    --ink: #1c1917; --muted: #57534e; --soft: #78716c; --line: #e7e5e4;
+    --teal: #0f766e; --teal-bg: #f0fdfa; --teal-line: #99f6e4;
+    --amber: #b45309; --amber-bg: #fffbeb; --amber-line: #fcd34d;
+    --blue: #1d4ed8; --blue-bg: #eff6ff; --blue-line: #bfdbfe;
+    --violet: #6d28d9; --violet-bg: #f5f3ff; --violet-line: #ddd6fe;
+    --red: #b91c1c; --red-bg: #fef2f2; --red-line: #fecaca;
+    --code-bg: #f5f5f4;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: -apple-system, "Helvetica Neue", "Segoe UI", Arial, sans-serif; color: var(--ink); font-size: 10.4pt; line-height: 1.55; margin: 0; }
+  h1, h2, h3, h4 { line-height: 1.25; margin: 0; }
+  h1.part { font-size: 24pt; color: var(--teal); margin: 0 0 4pt; }
+  .part-sub { color: var(--muted); font-size: 11pt; margin-bottom: 14pt; }
+  h2 { font-size: 15.5pt; margin: 20pt 0 8pt; padding-bottom: 4pt; border-bottom: 2px solid var(--teal-line); break-after: avoid; }
+  h2 .num { color: var(--teal); margin-right: 6pt; }
+  h3 { font-size: 12pt; margin: 14pt 0 5pt; break-after: avoid; }
+  h4 { font-size: 10.5pt; margin: 10pt 0 4pt; break-after: avoid; }
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 8pt; padding-left: 16pt; }
+  li { margin-bottom: 2.5pt; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 8.8pt; background: var(--code-bg); padding: 0.5pt 3pt; border-radius: 3pt; }
+  pre { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 8.4pt; line-height: 1.45; background: #1c1917; color: #f5f5f4; padding: 9pt 11pt; border-radius: 6pt; margin: 4pt 0 10pt; white-space: pre-wrap; word-break: break-word; break-inside: avoid; }
+  pre .c { color: #a8a29e; }
+  pre .k { color: #5eead4; }
+  pre .s { color: #fcd34d; }
+  table { width: 100%; border-collapse: collapse; margin: 4pt 0 10pt; font-size: 9.4pt; break-inside: auto; }
+  th { text-align: left; background: var(--teal-bg); color: var(--teal); font-weight: 700; }
+  thead { display: table-header-group; }
+  h2 + table, h3 + table, h3 + .flow { break-before: avoid; }
+  th, td { border: 1px solid var(--line); padding: 4.5pt 6pt; vertical-align: top; }
+  tr { break-inside: avoid; }
+  .page-break { break-before: page; }
+  .avoid { break-inside: avoid; }
+
+  /* concept boxes */
+  .box { border-radius: 7pt; padding: 8pt 11pt; margin: 6pt 0 9pt; border: 1px solid; break-inside: avoid; }
+  .box .lbl { display: block; font-size: 7.8pt; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 2pt; }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .def { background: var(--blue-bg); border-color: var(--blue-line); }
+  .def .lbl { color: var(--blue); }
+  .def p { font-weight: 600; }
+  .simple { background: var(--teal-bg); border-color: var(--teal-line); }
+  .simple .lbl { color: var(--teal); }
+  .ours { background: #fafaf9; border-color: var(--line); }
+  .ours .lbl { color: var(--muted); }
+  .tip { background: var(--amber-bg); border-color: var(--amber-line); }
+  .tip .lbl { color: var(--amber); }
+  .warn { background: var(--red-bg); border-color: var(--red-line); }
+  .warn .lbl { color: var(--red); }
+  .say { background: var(--violet-bg); border-color: var(--violet-line); }
+  .say .lbl { color: var(--violet); }
+
+  /* flows */
+  .flow { border: 1px solid var(--line); border-radius: 7pt; margin: 6pt 0 10pt; overflow: hidden; break-inside: avoid; }
+  .flow .ft { background: var(--teal); color: #fff; font-weight: 700; padding: 5pt 10pt; font-size: 9.6pt; }
+  .step { display: flex; gap: 8pt; padding: 5pt 10pt; border-top: 1px solid var(--line); font-size: 9.4pt; }
+  .step:first-of-type { border-top: 0; }
+  .step .n { flex: 0 0 16pt; height: 16pt; border-radius: 50%; background: var(--teal-bg); color: var(--teal); font-weight: 800; font-size: 8.5pt; display: flex; align-items: center; justify-content: center; margin-top: 1pt; }
+  .step .who { flex: 0 0 112pt; font-weight: 700; color: var(--muted); }
+  .step .what { flex: 1; }
+
+  /* cover */
+  .cover { height: 262mm; display: flex; flex-direction: column; justify-content: space-between; padding: 10mm 4mm; }
+  .cover .brand { display: flex; align-items: center; gap: 10pt; color: var(--teal); font-weight: 800; font-size: 14pt; }
+  .cover .logo { width: 34pt; height: 34pt; border-radius: 9pt; background: var(--teal); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15pt; }
+  .cover h1 { font-size: 34pt; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 12pt; }
+  .cover .lead { font-size: 13pt; color: var(--muted); max-width: 135mm; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6pt 10pt; max-width: 160mm; }
+  .legend .box { margin: 0; }
+  .toc { columns: 2; column-gap: 12mm; font-size: 9.8pt; }
+  .toc .grp { break-inside: avoid; margin-bottom: 8pt; }
+  .toc .grp b { color: var(--teal); display: block; margin-bottom: 2pt; }
+  .toc div.i { padding: 1pt 0; }
+  .toc .i span { color: var(--soft); display: inline-block; width: 18pt; }
+
+  .qa { border-bottom: 1px dashed var(--line); padding: 6pt 0 7pt; break-inside: avoid; }
+  .qa .q { font-weight: 700; margin-bottom: 2pt; }
+  .qa .q::before { content: "Q. "; color: var(--teal); }
+  .qa .a { color: #292524; }
+  .tag { display: inline-block; font-size: 7.6pt; font-weight: 700; padding: 0.5pt 5pt; border-radius: 8pt; background: var(--teal-bg); color: var(--teal); border: 1px solid var(--teal-line); margin-left: 4pt; vertical-align: 1pt; }
+  .tag.adv { background: var(--violet-bg); color: var(--violet); border-color: var(--violet-line); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8pt; }
+  .small { font-size: 8.8pt; color: var(--muted); }
+  svg text { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<section class="cover">
+  <div class="brand"><div class="logo">▲</div> LMS — Learning Management System</div>
+  <div>
+    <h1>The complete project guide<br>from basics to advanced</h1>
+    <p class="lead">Everything in this MERN project explained twice: once as the definition you should learn by heart, and once in simple words so you actually understand it. It covers authentication, access and refresh tokens, email, the payment gateway, Google login, uploads, the AI tutor, security, deployment, the bugs we fixed, and interview answers.</p>
+  </div>
+  <div>
+    <p style="font-weight:700;margin-bottom:6pt">How to read this guide: every concept uses the same coloured boxes</p>
+    <div class="legend">
+      <div class="box def"><span class="lbl">Definition — learn this</span><p>The formal, interview-ready definition.</p></div>
+      <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">An everyday analogy so it clicks.</p></div>
+      <div class="box ours"><span class="lbl">In our project</span><p>Exactly how this codebase does it, with file names.</p></div>
+      <div class="box tip"><span class="lbl">Interview tip</span><p>What interviewers ask and how to answer.</p></div>
+    </div>
+  </div>
+  <div class="small">Stack: React 19 · Vite · Node.js · Express 5 · MongoDB Atlas · Mongoose 8 · JWT · bcrypt · Passport (Google OAuth 2.0) · Razorpay · Google Gemini · Socket.IO · Cloudinary · Netlify · Render</div>
+</section>
+
+<!-- ============================== TOC ============================== -->
+<section class="page-break">
+  <h1 class="part">Contents</h1>
+  <div class="part-sub">Part A gives the big picture, Part B the fundamentals, Part C each feature in depth, Part D security and production, and Part E interview preparation.</div>
+  <div class="toc">
+    <div class="grp"><b>Part A — The big picture</b>
+      <div class="i"><span>1</span>What the project is</div>
+      <div class="i"><span>2</span>Tech stack: what each tool is and why</div>
+      <div class="i"><span>3</span>Architecture: how the pieces connect</div>
+      <div class="i"><span>4</span>Folder structure</div>
+      <div class="i"><span>5</span>Database design</div>
+      <div class="i"><span>6</span>The full API list</div>
+    </div>
+    <div class="grp"><b>Part B — Fundamentals</b>
+      <div class="i"><span>7</span>Client, server, HTTP and REST</div>
+      <div class="i"><span>8</span>Express: routes, middleware, errors</div>
+      <div class="i"><span>9</span>MongoDB and Mongoose</div>
+      <div class="i"><span>10</span>React concepts used</div>
+    </div>
+    <div class="grp"><b>Part C — Features in depth</b>
+      <div class="i"><span>11</span>Authentication vs authorization</div>
+      <div class="i"><span>12</span>Password hashing (bcrypt)</div>
+      <div class="i"><span>13</span>Signup with email OTP</div>
+      <div class="i"><span>14</span>JWT, explained piece by piece</div>
+      <div class="i"><span>15</span>Access token + refresh token</div>
+      <div class="i"><span>16</span>Roles and protected routes</div>
+      <div class="i"><span>17</span>Google sign-in (OAuth 2.0)</div>
+      <div class="i"><span>18</span>Forgot and reset password</div>
+      <div class="i"><span>19</span>Email delivery</div>
+      <div class="i"><span>20</span>Payment gateway (Razorpay)</div>
+      <div class="i"><span>21</span>File uploads (Multer + Cloudinary)</div>
+      <div class="i"><span>22</span>AI tutor (Gemini + Socket.IO)</div>
+      <div class="i"><span>23</span>Doubts (Q&amp;A with instructors)</div>
+    </div>
+    <div class="grp"><b>Part D — Security and production</b>
+      <div class="i"><span>24</span>Security measures</div>
+      <div class="i"><span>25</span>Deployment: Netlify, Render, Atlas</div>
+      <div class="i"><span>26</span>Problems we hit and how we fixed them</div>
+    </div>
+    <div class="grp"><b>Part E — Interview preparation</b>
+      <div class="i"><span>27</span>How to present the project</div>
+      <div class="i"><span>28</span>Interview questions with answers</div>
+      <div class="i"><span>29</span>What I would improve next</div>
+      <div class="i"><span>30</span>Glossary</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PART A ============================== -->
+<section class="page-break">
+  <h1 class="part">Part A — The big picture</h1>
+  <div class="part-sub">Start here. If you can explain this part clearly, you can survive any "tell me about your project" question.</div>
+
+  <h2><span class="num">1</span>What the project is</h2>
+  <p>LMS is an online learning platform similar to Udemy. There are two kinds of users:</p>
+  <table class="avoid">
+    <thead><tr><th style="width:22%">Role</th><th style="width:22%">Stored in DB as</th><th>What they can do</th></tr></thead>
+    <tr><td><b>Student</b></td><td><code>role: "user"</code></td><td>Browse the catalog, enroll (free or paid via Razorpay), watch lectures with progress tracking, ask the instructor doubts, chat with the AI tutor.</td></tr>
+    <tr><td><b>Instructor</b></td><td><code>role: "admin"</code></td><td>Everything a student can do, plus create, edit and delete their own courses, upload lecture videos, see enrolled students, and answer doubts.</td></tr>
+  </table>
+  <div class="box say"><span class="lbl">Say it like this (30 seconds)</span>
+    <p style="font-weight:400">"I built a full-stack learning platform on the MERN stack. Instructors create courses and upload lectures; students can enroll for free or pay through Razorpay, watch lectures, ask the instructor doubts and use an AI tutor powered by Google Gemini over WebSockets. Authentication uses email OTP verification, bcrypt, short-lived JWT access tokens with rotating refresh tokens, plus Google OAuth. The frontend is on Netlify, the API on Render, the database on MongoDB Atlas, and uploads go to Cloudinary."</p>
+  </div>
+
+  <h2><span class="num">2</span>Tech stack: what each tool is and why</h2>
+  <table>
+    <thead><tr><th style="width:20%">Tool</th><th style="width:40%">What it is (definition)</th><th>Why we use it here</th></tr></thead>
+    <tr><td><b>MongoDB</b></td><td>A NoSQL, document-oriented database that stores data as JSON-like documents (BSON).</td><td>Flexible schema; courses, users and payments map naturally to documents. Hosted on MongoDB Atlas.</td></tr>
+    <tr><td><b>Express.js</b></td><td>A minimal web framework for Node.js for building APIs with routes and middleware.</td><td>All <code>/api/...</code> endpoints. We use Express 5, which forwards errors from async handlers.</td></tr>
+    <tr><td><b>React</b></td><td>A JavaScript library for building user interfaces from reusable components.</td><td>The whole frontend (React 19, built with Vite).</td></tr>
+    <tr><td><b>Node.js</b></td><td>A JavaScript runtime that runs JS outside the browser, on the server.</td><td>Runs the Express server.</td></tr>
+    <tr><td><b>Mongoose</b></td><td>An ODM (Object Data Modeling) library: schemas, validation and queries for MongoDB.</td><td>Models: User, Course, Lecture, Payment, Query, RefreshToken.</td></tr>
+    <tr><td><b>JWT</b></td><td>JSON Web Token: a compact, signed token that carries claims (e.g. user id).</td><td>Access tokens, the signup activation token and the password-reset token.</td></tr>
+    <tr><td><b>bcrypt</b></td><td>A slow, salted password-hashing algorithm.</td><td>Passwords are never stored in plain text.</td></tr>
+    <tr><td><b>Passport</b></td><td>Authentication middleware for Node with "strategies" for providers.</td><td><code>passport-google-oauth20</code> for "Continue with Google".</td></tr>
+    <tr><td><b>Razorpay</b></td><td>An Indian payment gateway (cards, UPI, net banking, wallets).</td><td>Paid course enrollment.</td></tr>
+    <tr><td><b>Socket.IO</b></td><td>A library for real-time, two-way communication over WebSockets.</td><td>The live AI-tutor chat.</td></tr>
+    <tr><td><b>Google Gemini</b></td><td>Google's large language model API (<code>@google/genai</code>).</td><td>Generates the AI tutor's answers.</td></tr>
+    <tr><td><b>Multer</b></td><td>Express middleware that handles <code>multipart/form-data</code> file uploads.</td><td>Receives course images and lecture videos.</td></tr>
+    <tr><td><b>Cloudinary</b></td><td>A cloud service for storing and delivering images and videos.</td><td>Permanent storage for uploads (Render's disk is wiped on restart).</td></tr>
+    <tr><td><b>Axios</b></td><td>A promise-based HTTP client for the browser and Node.</td><td>All API calls from React, with interceptors for tokens.</td></tr>
+    <tr><td><b>helmet / cors / express-rate-limit</b></td><td>Security middleware: secure headers, cross-origin rules, request limits.</td><td>Hardening the API.</td></tr>
+    <tr><td><b>Netlify / Render</b></td><td>Hosting platforms: static sites (Netlify) and Node servers (Render).</td><td>Frontend on Netlify, backend on Render.</td></tr>
+  </table>
+  <div class="box tip"><span class="lbl">Interview tip — "Why MongoDB and not SQL?"</span>
+    <p style="font-weight:400">"Our data is document-shaped: a course with its details, a user with a list of enrolled course ids. MongoDB lets the schema evolve quickly while I'm building, and Mongoose still gives me schemas and validation. If I needed complex multi-table transactions, like accounting, I'd consider PostgreSQL."</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">3</span>Architecture: how the pieces connect</h2>
+  <svg viewBox="0 0 720 380" width="100%" style="margin:4pt 0 8pt">
+    <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#57534e"/></marker></defs>
+    <!-- browser -->
+    <rect x="10" y="150" width="140" height="80" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="80" y="180" text-anchor="middle" font-weight="700" font-size="13">Browser</text>
+    <text x="80" y="198" text-anchor="middle" font-size="10.5" fill="#57534e">React app</text>
+    <text x="80" y="213" text-anchor="middle" font-size="10.5" fill="#57534e">from Netlify</text>
+    <!-- netlify -->
+    <rect x="10" y="20" width="140" height="70" rx="10" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="80" y="48" text-anchor="middle" font-weight="700" font-size="13">Netlify</text>
+    <text x="80" y="66" text-anchor="middle" font-size="10.5" fill="#57534e">serves HTML/JS/CSS</text>
+    <line x1="80" y1="90" x2="80" y2="148" stroke="#57534e" stroke-width="1.4" marker-end="url(#ar)"/>
+    <!-- server -->
+    <rect x="250" y="120" width="200" height="140" rx="12" fill="#0f766e"/>
+    <text x="350" y="150" text-anchor="middle" font-weight="800" font-size="14" fill="#fff">Express API on Render</text>
+    <text x="350" y="172" text-anchor="middle" font-size="10.5" fill="#ccfbf1">REST /api/* (JSON)</text>
+    <text x="350" y="188" text-anchor="middle" font-size="10.5" fill="#ccfbf1">Socket.IO (AI tutor)</text>
+    <text x="350" y="204" text-anchor="middle" font-size="10.5" fill="#ccfbf1">/auth/google (OAuth)</text>
+    <text x="350" y="220" text-anchor="middle" font-size="10.5" fill="#ccfbf1">JWT check · roles · validation</text>
+    <text x="350" y="240" text-anchor="middle" font-size="10.5" fill="#ccfbf1">/health</text>
+    <line x1="150" y1="180" x2="248" y2="180" stroke="#57534e" stroke-width="1.4" marker-end="url(#ar)"/>
+    <line x1="248" y1="205" x2="152" y2="205" stroke="#57534e" stroke-width="1.4" marker-end="url(#ar)"/>
+    <text x="199" y="172" text-anchor="middle" font-size="9.5" fill="#57534e">HTTPS + token</text>
+    <text x="199" y="220" text-anchor="middle" font-size="9.5" fill="#57534e">JSON</text>
+    <!-- services -->
+    <g font-size="11">
+      <rect x="540" y="10" width="170" height="44" rx="8" fill="#fafaf9" stroke="#d6d3d1"/><text x="625" y="29" text-anchor="middle" font-weight="700">MongoDB Atlas</text><text x="625" y="45" text-anchor="middle" font-size="9.5" fill="#57534e">users, courses, payments…</text>
+      <rect x="540" y="62" width="170" height="44" rx="8" fill="#fafaf9" stroke="#d6d3d1"/><text x="625" y="81" text-anchor="middle" font-weight="700">Cloudinary</text><text x="625" y="97" text-anchor="middle" font-size="9.5" fill="#57534e">images &amp; videos</text>
+      <rect x="540" y="114" width="170" height="44" rx="8" fill="#fafaf9" stroke="#d6d3d1"/><text x="625" y="133" text-anchor="middle" font-weight="700">Razorpay</text><text x="625" y="149" text-anchor="middle" font-size="9.5" fill="#57534e">orders &amp; payments</text>
+      <rect x="540" y="166" width="170" height="44" rx="8" fill="#fafaf9" stroke="#d6d3d1"/><text x="625" y="185" text-anchor="middle" font-weight="700">Google OAuth</text><text x="625" y="201" text-anchor="middle" font-size="9.5" fill="#57534e">"Continue with Google"</text>
+      <rect x="540" y="218" width="170" height="44" rx="8" fill="#fafaf9" stroke="#d6d3d1"/><text x="625" y="237" text-anchor="middle" font-weight="700">Gmail (Apps Script)</text><text x="625" y="253" text-anchor="middle" font-size="9.5" fill="#57534e">OTP &amp; reset emails</text>
+      <rect x="540" y="270" width="170" height="44" rx="8" fill="#fafaf9" stroke="#d6d3d1"/><text x="625" y="289" text-anchor="middle" font-weight="700">Google Gemini</text><text x="625" y="305" text-anchor="middle" font-size="9.5" fill="#57534e">AI tutor answers</text>
+    </g>
+    <g stroke="#a8a29e" stroke-width="1.2" fill="none" marker-end="url(#ar)">
+      <path d="M450 140 C 500 140, 500 32, 538 32"/>
+      <path d="M450 155 C 505 155, 505 84, 538 84"/>
+      <path d="M450 170 C 510 170, 510 136, 538 136"/>
+      <path d="M450 190 L 538 188"/>
+      <path d="M450 210 C 510 210, 510 240, 538 240"/>
+      <path d="M450 230 C 500 230, 500 292, 538 292"/>
+    </g>
+    <text x="10" y="300" font-size="10.5" fill="#57534e">The browser never talks to MongoDB, Razorpay's secret API or Gemini directly. Secrets live only on the</text>
+    <text x="10" y="316" font-size="10.5" fill="#57534e">server (Render environment variables). The browser only gets: the page (from Netlify), JSON (from the API),</text>
+    <text x="10" y="332" font-size="10.5" fill="#57534e">and Razorpay's PUBLIC key id to open the payment popup.</text>
+  </svg>
+
+  <h3>How one request travels (example: "show my courses")</h3>
+  <div class="flow"><div class="ft">GET /api/mycourse</div>
+    <div class="step"><span class="n">1</span><span class="who">React (Dashboard)</span><span class="what">calls <code>api.get("/api/mycourse")</code>. The axios interceptor adds the header <code>token: &lt;access token&gt;</code>.</span></div>
+    <div class="step"><span class="n">2</span><span class="who">Express</span><span class="what">helmet, CORS, the rate limiter and the JSON parser run, then the router matches <code>/api/mycourse</code>.</span></div>
+    <div class="step"><span class="n">3</span><span class="who">isAuth middleware</span><span class="what">verifies the JWT signature and expiry, loads the user and sets <code>req.user</code>. If anything is wrong it returns 401.</span></div>
+    <div class="step"><span class="n">4</span><span class="who">Controller</span><span class="what"><code>getMyCourses</code> finds courses whose id is in <code>user.subscription</code> and responds with <code>{ courses }</code>.</span></div>
+    <div class="step"><span class="n">5</span><span class="who">React</span><span class="what">stores them in Context state and re-renders the dashboard.</span></div>
+  </div>
+
+  <h2><span class="num">4</span>Folder structure</h2>
+<pre>server/
+  index.js              <span class="c">app setup: security, CORS, routes, Socket.IO, error handler</span>
+  config/               <span class="c">config.js (env helpers), razorpay.js, envCheck.js (/health)</span>
+  database/db.js        <span class="c">MongoDB connection with retry</span>
+  models/               <span class="c">User, Course, Lecture, Payment, Query, RefreshToken</span>
+  controllers/          <span class="c">the logic: user.js, courses.js, admin.js, query.js</span>
+  routes/               <span class="c">URL → middleware → controller</span>
+  middlewares/          <span class="c">isAuth/isAdmin, TryCatch, multer, sendMail</span>
+  utils/                <span class="c">tokens.js (access/refresh), storage.js (Cloudinary)</span>
+  src/service/ai.service.js  <span class="c">Gemini calls</span>
+  scripts/gmail-relay.gs     <span class="c">Google Apps Script for sending email</span>
+client/src/
+  api/axios.js          <span class="c">API client + automatic token refresh</span>
+  context/              <span class="c">UserContext (auth), courseContext, ThemeContext</span>
+  pages/ Admin/ components/ styles/ utils/</pre>
+  <div class="box simple"><span class="lbl">In simple words: routes → middleware → controller → model</span>
+    <p style="font-weight:400">Think of a restaurant. The <b>route</b> is the menu item ("POST /api/user/login"), the <b>middleware</b> are the security guard and the receptionist (are you logged in? are you an instructor?), the <b>controller</b> is the chef who does the work, and the <b>model</b> is the pantry (database) the chef takes ingredients from.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">5</span>Database design</h2>
+  <table>
+    <thead><tr><th style="width:17%">Collection</th><th style="width:42%">Main fields</th><th>Notes</th></tr></thead>
+    <tr><td><b>User</b></td><td>name, email, password (bcrypt hash), googleId, avatar, role, subscription[] (course ids), resetPasswordExpire</td><td><code>subscription</code> is the list of enrolled courses. Google-only users have no password.</td></tr>
+    <tr><td><b>Course</b></td><td>title, description, image, price, duration, category, createdBy → User</td><td>Price 0 means a free course.</td></tr>
+    <tr><td><b>Lecture</b></td><td>title, description, video, course → Course, createdBy → User</td><td>Many lectures belong to one course.</td></tr>
+    <tr><td><b>Payment</b></td><td>razorpay_order_id, razorpay_payment_id (unique), razorpay_signature, user, course, amount</td><td>The unique payment id makes saving a payment idempotent.</td></tr>
+    <tr><td><b>Query</b></td><td>title, topic, description, course, student, instructor, status, reply</td><td>A student's doubt and the instructor's reply.</td></tr>
+    <tr><td><b>RefreshToken</b></td><td>user, tokenHash, family, expiresAt, revokedAt, revokeReason</td><td>Login sessions. A TTL index deletes rows automatically after <code>expiresAt</code>.</td></tr>
+  </table>
+  <div class="box def"><span class="lbl">Definition — reference vs embedding</span><p>In MongoDB you either <u>embed</u> related data inside a document, or <u>reference</u> it by storing another document's <code>_id</code> and joining with <code>populate()</code>.</p></div>
+  <div class="box ours"><span class="lbl">In our project</span><p style="font-weight:400">We <b>reference</b>: <code>Course.createdBy</code> points to a User, <code>Lecture.course</code> points to a Course, and <code>User.subscription</code> is an array of Course ids. Lists use <code>.populate("createdBy", "name")</code> to show the instructor's name.</p></div>
+
+  <h2><span class="num">6</span>The full API list</h2>
+  <table>
+    <thead><tr><th style="width:9%">Method</th><th style="width:33%">Path</th><th style="width:20%">Who</th><th>Does</th></tr></thead>
+    <tr><td>POST</td><td>/api/user/register</td><td>anyone</td><td>Validate, hash the password, email a 6-digit OTP</td></tr>
+    <tr><td>POST</td><td>/api/user/verify</td><td>anyone</td><td>Check the OTP and create the account</td></tr>
+    <tr><td>POST</td><td>/api/user/login</td><td>anyone</td><td>Return an access token and a refresh token</td></tr>
+    <tr><td>POST</td><td>/api/user/refresh</td><td>holder of refresh token</td><td>Rotate: issue a new pair</td></tr>
+    <tr><td>POST</td><td>/api/user/logout</td><td>holder of refresh token</td><td>Revoke this device's session</td></tr>
+    <tr><td>POST</td><td>/api/user/forgot · /reset</td><td>anyone</td><td>Email a reset link · set a new password</td></tr>
+    <tr><td>GET/PUT</td><td>/api/user/myprofile · /profile</td><td>logged in</td><td>Read or update name and password</td></tr>
+    <tr><td>GET</td><td>/auth/google → /auth/google/callback</td><td>anyone</td><td>Google sign-in</td></tr>
+    <tr><td>GET</td><td>/api/courses/all · /api/course/:id</td><td>anyone</td><td>Catalog and course details</td></tr>
+    <tr><td>GET</td><td>/api/lectures/:id · /api/lecture/:id</td><td>enrolled or owner</td><td>Lecture list and one lecture</td></tr>
+    <tr><td>GET</td><td>/api/mycourse</td><td>logged in</td><td>My enrolled courses</td></tr>
+    <tr><td>POST</td><td>/api/course/checkout/:id</td><td>logged in</td><td>Free: enroll now. Paid: create a Razorpay order</td></tr>
+    <tr><td>POST</td><td>/api/verification/:id</td><td>logged in</td><td>Verify the payment and enroll</td></tr>
+    <tr><td>POST/PUT/DELETE</td><td>/api/course/new · /api/course/:id</td><td>instructor</td><td>Create, edit or delete a course</td></tr>
+    <tr><td>POST/DELETE</td><td>/api/courses/:id · /api/lecture/:id</td><td>instructor (owner)</td><td>Add or delete a lecture</td></tr>
+    <tr><td>GET</td><td>/api/stats · /api/users</td><td>instructor</td><td>Dashboard numbers · enrolled students</td></tr>
+    <tr><td>POST/GET/PUT</td><td>/api/query/create/:courseId · /my · /instructor · /status/:id</td><td>student / instructor</td><td>Ask a doubt · my doubts · inbox · reply</td></tr>
+    <tr><td>GET</td><td>/health</td><td>anyone</td><td>DB status and which services are configured (no secrets)</td></tr>
+  </table>
+</section>
+
+<!-- ============================== PART B ============================== -->
+<section class="page-break">
+  <h1 class="part">Part B — Fundamentals</h1>
+  <div class="part-sub">The basics every interviewer assumes you know, each tied back to this project.</div>
+
+  <h2><span class="num">7</span>Client, server, HTTP and REST</h2>
+  <div class="box def"><span class="lbl">Definition — client–server</span><p>The client (browser/React) sends requests; the server (Express) processes them and sends responses. They communicate over HTTP(S).</p></div>
+  <div class="box def"><span class="lbl">Definition — REST API</span><p>REST (Representational State Transfer) is an architectural style where resources are identified by URLs and manipulated with standard HTTP methods (GET, POST, PUT, DELETE). It is stateless: each request carries everything needed to process it.</p></div>
+  <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">The URL is the <i>thing</i> (a course), the method is the <i>action</i> (read it, create it, change it, delete it). "Stateless" means the server doesn't remember you between requests. That's why every request carries your token, like showing your ID card at every door.</p></div>
+  <table>
+    <thead><tr><th style="width:14%">Status</th><th style="width:26%">Meaning</th><th>Where we return it</th></tr></thead>
+    <tr><td>200 / 201</td><td>OK / Created</td><td>Successful reads; order created at checkout</td></tr>
+    <tr><td>400</td><td>Bad request</td><td>Missing fields, wrong OTP, invalid id, failed payment signature</td></tr>
+    <tr><td>401</td><td>Unauthenticated</td><td>No token, expired token (code <code>TOKEN_EXPIRED</code>), bad refresh token</td></tr>
+    <tr><td>403</td><td>Forbidden</td><td>A student calling an instructor-only route</td></tr>
+    <tr><td>404</td><td>Not found</td><td>Course or user doesn't exist</td></tr>
+    <tr><td>429</td><td>Too many requests</td><td>The rate limiter blocked the caller</td></tr>
+    <tr><td>500 / 502 / 503</td><td>Server error / bad upstream / unavailable</td><td>Unexpected bug / email provider failed / payments not configured</td></tr>
+  </table>
+  <div class="box tip"><span class="lbl">Interview tip — 401 vs 403</span><p style="font-weight:400"><b>401</b> = "I don't know who you are" (log in). <b>403</b> = "I know who you are, but you're not allowed" (a student trying to create a course).</p></div>
+
+  <h2><span class="num">8</span>Express: routes, middleware and error handling</h2>
+  <div class="box def"><span class="lbl">Definition — middleware</span><p>A function <code>(req, res, next)</code> that runs between receiving a request and sending the response. It can read or modify the request, end the response, or call <code>next()</code> to pass control on.</p></div>
+<pre><span class="c">// routes/admin.js — a chain of middleware, read left to right</span>
+router.post(<span class="s">"/course/new"</span>, isAuth, isAdmin, uploadFiles, createCourse);
+<span class="c">//                       ^ logged in? ^ instructor? ^ save file ^ do the work</span></pre>
+  <div class="box ours"><span class="lbl">In our project — the global middleware order (server/index.js)</span>
+    <ol style="font-weight:400">
+      <li><code>helmet()</code> sets security headers, configured so the frontend can load our images and videos.</li>
+      <li><code>cors()</code> allows only our frontend origins (from <code>CLIENT_URL</code>).</li>
+      <li>A rate limiter allows 1000 requests per 15 minutes per IP overall (stricter on auth routes).</li>
+      <li><code>express.json({ limit: "1mb" })</code> parses JSON bodies.</li>
+      <li>Static <code>/uploads</code>, then the routers, then a <b>global error handler</b>.</li>
+    </ol>
+  </div>
+  <div class="box def"><span class="lbl">Definition — centralized error handling</span><p>An Express error handler has four arguments <code>(err, req, res, next)</code>. Errors passed to <code>next(err)</code> or thrown in async handlers land there, so all errors are formatted in one place.</p></div>
+  <div class="box ours"><span class="lbl">In our project</span><p style="font-weight:400"><code>TryCatch(fn)</code> wraps each controller and forwards errors to <code>next(err)</code>. The global handler turns Multer upload errors (such as "file too large") into a 400 with a clear message, Mongoose validation and invalid-id (cast) errors into a 400, and anything else into a generic 500 message. Users never see stack traces.</p></div>
+
+  <h2><span class="num">9</span>MongoDB and Mongoose</h2>
+  <div class="box def"><span class="lbl">Definition — schema &amp; model</span><p>A Mongoose <b>schema</b> describes the shape and rules of a document; a <b>model</b> is the class compiled from it that you use to query a collection (<code>User.findById</code>, <code>Course.create</code>…).</p></div>
+  <div class="box def"><span class="lbl">Definition — index</span><p>An index is a sorted lookup structure that makes queries on a field fast and can enforce rules like <i>unique</i> or <i>auto-delete after a time</i> (TTL).</p></div>
+  <div class="box ours"><span class="lbl">In our project</span><ul style="font-weight:400">
+    <li><code>razorpay_payment_id</code> is <b>unique</b>, so the same payment can't be saved twice.</li>
+    <li>RefreshToken has a <b>TTL index</b> on <code>expiresAt</code>, so MongoDB deletes expired sessions by itself.</li>
+    <li>Email login uses a case-insensitive <b>collation</b>, so <code>Name@Gmail.com</code> and <code>name@gmail.com</code> match.</li>
+    <li>The connection retries every 5 seconds if Atlas is unreachable, and <code>/health</code> shows <code>database: connected/disconnected</code>.</li>
+  </ul></div>
+
+  <h2><span class="num">10</span>React concepts used</h2>
+  <table>
+    <thead><tr><th style="width:22%">Concept</th><th style="width:40%">Definition</th><th>Where in our code</th></tr></thead>
+    <tr><td><b>Component</b></td><td>A reusable function that returns UI (JSX).</td><td><code>CourseCard</code>, <code>Header</code>, <code>Modal</code></td></tr>
+    <tr><td><b>State (useState)</b></td><td>Data that, when changed, re-renders the component.</td><td>Form inputs, chat messages</td></tr>
+    <tr><td><b>Effect (useEffect)</b></td><td>Runs side effects (fetching, subscriptions) after render.</td><td>Fetching courses, opening the socket</td></tr>
+    <tr><td><b>Context API</b></td><td>Shares state across the tree without passing props through every level.</td><td><code>UserContext</code> (who is logged in), <code>courseContext</code>, <code>ThemeContext</code></td></tr>
+    <tr><td><b>React Router</b></td><td>Client-side routing: switches pages without reloading.</td><td><code>App.jsx</code> routes</td></tr>
+    <tr><td><b>Protected route</b></td><td>A wrapper that redirects when the user isn't allowed.</td><td><code>ProtectedRoute</code> (login), <code>allow</code> (instructor), <code>GuestRoute</code></td></tr>
+    <tr><td><b>Axios interceptor</b></td><td>Code that runs before every request or after every response.</td><td>Adds the token; refreshes it on 401; shows the "waking server" toast</td></tr>
+  </table>
+  <div class="box warn"><span class="lbl">Remember</span><p style="font-weight:400">Protected routes in React are only for <b>user experience</b>. Real security is on the server: every protected API checks the token and role again. A user can edit frontend code, but they can't fake a server-side signature check.</p></div>
+</section>
+
+<!-- ============================== PART C ============================== -->
+<section class="page-break">
+  <h1 class="part">Part C — Features in depth</h1>
+  <div class="part-sub">The heart of your interview: authentication, tokens, email, payments, uploads and the AI tutor.</div>
+
+  <h2><span class="num">11</span>Authentication vs authorization</h2>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Definition — authentication (AuthN)</span><p>The process of verifying <u>who</u> a user is, e.g. by checking a password, an OTP or a Google identity.</p></div>
+    <div class="box def"><span class="lbl">Definition — authorization (AuthZ)</span><p>The process of deciding <u>what</u> an authenticated user is allowed to do, e.g. only instructors can create courses.</p></div>
+  </div>
+  <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">At an airport, showing your passport is <b>authentication</b> (proving who you are). Your boarding pass deciding whether you may enter the business lounge is <b>authorization</b> (what you're allowed to do).</p></div>
+  <div class="box ours"><span class="lbl">In our project</span><p style="font-weight:400">Authentication: email + password (bcrypt), email OTP at signup, Google OAuth, and JWT access tokens on every request (<code>isAuth</code>). Authorization: <code>isAdmin</code> (instructor-only routes), plus ownership checks inside controllers (only the course's creator can edit it or add lectures; only enrolled students can open lectures or ask doubts; only the course's instructor can answer its doubts).</p></div>
+
+  <h2><span class="num">12</span>Password hashing (bcrypt)</h2>
+  <div class="box def"><span class="lbl">Definition — hashing</span><p>Hashing is a one-way function that turns input into a fixed-length value that can't be reversed. Passwords are stored as hashes, and a login is checked by hashing the attempt and comparing.</p></div>
+  <div class="box def"><span class="lbl">Definition — salt &amp; cost factor</span><p>A salt is random data added to each password before hashing, so identical passwords get different hashes and precomputed "rainbow tables" don't work. The cost factor makes hashing deliberately slow to resist brute force.</p></div>
+  <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">Hashing is like a meat grinder: you can turn a steak into mince, but not mince back into a steak. If the database leaks, attackers see only "mince". bcrypt also adds a random pinch of salt to every password and grinds slowly on purpose, so guessing millions of passwords takes forever.</p></div>
+  <div class="box ours"><span class="lbl">In our project</span><p style="font-weight:400"><code>bcrypt.hash(password, 10)</code> at signup and password change (10 = cost factor, 2<sup>10</sup> rounds); <code>bcrypt.compare()</code> at login. The hash is never sent to the browser: <code>publicUser()</code> removes it and adds only a <code>hasPassword</code> flag.</p></div>
+  <div class="box tip"><span class="lbl">Interview tip — hashing vs encryption</span><p style="font-weight:400"><b>Encryption</b> is two-way (with a key you can decrypt). <b>Hashing</b> is one-way. Passwords must be <b>hashed</b>, because even the server should never be able to recover them.</p></div>
+
+  <h2><span class="num">13</span>Signup with email OTP</h2>
+  <div class="box def"><span class="lbl">Definition — OTP</span><p>A One-Time Password is a short code valid for a single use and a short time, sent to something the user owns (email or phone) to prove they own it.</p></div>
+  <div class="flow"><div class="ft">Signup → verify (the account is created only after the email is proven)</div>
+    <div class="step"><span class="n">1</span><span class="who">Browser</span><span class="what">POST <code>/api/user/register</code> {name, email, password, role}</span></div>
+    <div class="step"><span class="n">2</span><span class="who">Server</span><span class="what">Validates the input, checks the email isn't taken, hashes the password, and generates a 6-digit OTP with <code>crypto.randomInt</code> (cryptographically secure, unlike <code>Math.random</code>).</span></div>
+    <div class="step"><span class="n">3</span><span class="who">Server</span><span class="what">Puts {user details + hashed password + OTP} inside an <b>activation JWT</b> signed with <code>ACTIVATION_SECRET</code>, valid for 15 minutes, then emails the OTP.</span></div>
+    <div class="step"><span class="n">4</span><span class="who">Browser</span><span class="what">Keeps the activation token in <code>sessionStorage</code>; the user types the code from their inbox.</span></div>
+    <div class="step"><span class="n">5</span><span class="who">Server</span><span class="what">POST <code>/api/user/verify</code>: verifies the JWT (signature and expiry), compares the OTP, and only then creates the user in MongoDB.</span></div>
+  </div>
+  <div class="box simple"><span class="lbl">Why this design is nice</span><p style="font-weight:400">Nothing is saved until the email is proven, so fake signups never fill the database. The pending signup is carried <i>inside a signed token</i> instead of a "pending users" table, and because it's signed, nobody can change the OTP or the role inside it.</p></div>
+  <div class="box warn"><span class="lbl">Honest limitation (good to mention)</span><p style="font-weight:400">The JWT payload is only <b>encoded</b>, not encrypted. Anyone holding the activation token could decode it and read the OTP. That's acceptable because the token only lives in the same browser that's signing up. A stronger design stores only a <i>hash</i> of the OTP, or keeps pending signups in the database with an attempt limit.</p></div>
+</section>
+
+<section>
+  <h2><span class="num">14</span>JWT, explained piece by piece</h2>
+  <div class="box def"><span class="lbl">Definition — JWT</span><p>A JSON Web Token is a compact, URL-safe token made of three Base64URL parts, <code>header.payload.signature</code>. The signature (HMAC-SHA256 with a server secret, "HS256") lets the server verify the token wasn't changed and was issued by it.</p></div>
+<pre>eyJhbGciOiJIUzI1NiJ9 . eyJfaWQiOiI2NWYx...","cm9sZSI6InVzZXIiLCJleHAiOjE3...} . 3q2-7Hk9...
+<span class="c">     header                       payload (claims)                                    signature</span>
+<span class="c">{ "alg": "HS256" }    { "_id": "65f1…", "role": "user", "iat": …, "exp": … }   HMAC(header.payload, JWT_SECRET_KEY)</span></pre>
+  <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">A JWT is like a concert wristband with a tamper-proof seal. Anyone can <i>read</i> what's printed on it (the payload is just encoded), but only the organiser can make the seal. If you change "user" to "admin", the seal breaks and the server rejects it. <b>So never put secrets in a JWT payload.</b></p></div>
+  <div class="box tip"><span class="lbl">Interview tip — "Why JWT instead of sessions?"</span><p style="font-weight:400">JWTs are <b>stateless</b>: the server verifies the signature without a database lookup, which scales well and works across domains (our frontend and API are on different domains). The trade-off is that a JWT <b>can't be cancelled</b> before it expires. That's exactly why we keep access tokens short-lived and add refresh tokens, which <i>are</i> stored and can be revoked (next section).</p></div>
+
+  <h2><span class="num">15</span>Access token + refresh token <span class="tag adv">advanced</span></h2>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Definition — access token</span><p>A short-lived credential (here a JWT, 15 minutes) sent with every API request to prove the user is authenticated.</p></div>
+    <div class="box def"><span class="lbl">Definition — refresh token</span><p>A long-lived credential (here 30 days) used only to obtain a new access token when the old one expires, without asking the user to log in again.</p></div>
+  </div>
+  <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">Think of a hotel. The <b>access token</b> is your room key card. It's used all the time but expires quickly, so a lost card is useless soon. The <b>refresh token</b> is your booking record at reception. You show it only at reception (the <code>/refresh</code> endpoint) to get a fresh key card, and reception can cancel your booking at any moment (logout, password change).</p></div>
+
+  <h3>Why two tokens instead of one?</h3>
+  <table class="avoid">
+    <thead><tr><th style="width:25%"></th><th>One long JWT (what we had: 7 days)</th><th>Access 15 min + refresh 30 days (now)</th></tr></thead>
+    <tr><td>If the token is stolen</td><td>The attacker has 7 days of access</td><td>A stolen access token works for at most 15 minutes</td></tr>
+    <tr><td>Logout / "log out everywhere"</td><td>Impossible: a JWT stays valid until it expires</td><td>The refresh token is revoked in the DB, so the session dies</td></tr>
+    <tr><td>Password changed</td><td>Old tokens keep working</td><td>All other devices are signed out</td></tr>
+    <tr><td>User experience</td><td>Logged out suddenly after 7 days</td><td>Silent refresh: stays logged in for 30 days of use</td></tr>
+  </table>
+
+  <div class="flow"><div class="ft">Login → normal requests → silent refresh → logout</div>
+    <div class="step"><span class="n">1</span><span class="who">Login</span><span class="what"><code>POST /api/user/login</code> returns <code>{ accessToken, refreshToken }</code>. The server stores only the <b>SHA-256 hash</b> of the refresh token, plus a "family" id, in the <code>RefreshToken</code> collection.</span></div>
+    <div class="step"><span class="n">2</span><span class="who">Every request</span><span class="what">The axios request interceptor adds <code>token: &lt;accessToken&gt;</code>. <code>isAuth</code> verifies it with no DB lookup for the token itself.</span></div>
+    <div class="step"><span class="n">3</span><span class="who">After 15 min</span><span class="what">The API answers <code>401 { code: "TOKEN_EXPIRED" }</code>.</span></div>
+    <div class="step"><span class="n">4</span><span class="who">Axios (automatic)</span><span class="what">The response interceptor calls <code>POST /api/user/refresh { refreshToken }</code>, saves the new pair and <b>replays the original request</b>. The user notices nothing.</span></div>
+    <div class="step"><span class="n">5</span><span class="who">Server: rotation</span><span class="what">The old refresh token is marked <code>revokedAt / "rotated"</code> and a brand-new one is issued in the same family. Each refresh token works <b>once</b>.</span></div>
+    <div class="step"><span class="n">6</span><span class="who">Logout</span><span class="what"><code>POST /api/user/logout</code> revokes the refresh token, and the browser deletes both tokens.</span></div>
+  </div>
+
+  <h3>The advanced parts (what makes it production-grade)</h3>
+  <table>
+    <thead><tr><th style="width:26%">Technique</th><th>What it does and why</th></tr></thead>
+    <tr><td><b>Opaque refresh token</b></td><td>A 96-character random string (<code>crypto.randomBytes(48)</code>), not a JWT. It means nothing by itself, so the server must look it up, which is what makes it revocable.</td></tr>
+    <tr><td><b>Hashed in the DB</b></td><td>We store <code>sha256(token)</code>, like passwords. If the database leaks, the stored values can't be used to log in.</td></tr>
+    <tr><td><b>Rotation</b></td><td>Every refresh retires the old token and issues a new one, so a refresh token is single-use.</td></tr>
+    <tr><td><b>Reuse detection</b></td><td>If a retired token is used again, two parties have the same token: the real user and a thief. We can't tell which is which, so we revoke the <b>whole family</b> and both must log in again.</td></tr>
+    <tr><td><b>Race handling</b></td><td>Two browser tabs may refresh at the same moment. The client uses the Web Locks API so only one tab refreshes, and the server allows a 20-second grace window so this isn't mistaken for theft.</td></tr>
+    <tr><td><b>Single-flight refresh</b></td><td>If 5 requests fail at once, the client makes <b>one</b> refresh call and all 5 wait for it and retry. (Tested: two parallel 401s → one <code>/refresh</code> → both succeed.)</td></tr>
+    <tr><td><b>Revoke on password change / reset</b></td><td>All sessions are revoked. The device that changed the password receives fresh tokens.</td></tr>
+    <tr><td><b>TTL cleanup</b></td><td>MongoDB deletes expired token rows automatically.</td></tr>
+    <tr><td><b>Socket.IO too</b></td><td>The socket handshake checks the access token. If it has expired, the server replies <code>token_expired</code>, the client refreshes and reconnects.</td></tr>
+  </table>
+
+  <div class="box tip"><span class="lbl">Interview tip — "Where do you store tokens? Isn't localStorage unsafe?"</span><p style="font-weight:400">"The ideal is an <b>httpOnly, Secure cookie</b> for the refresh token, so JavaScript can't read it. But our frontend (netlify.app) and API (onrender.com) are on <b>different sites</b>, and browsers like Safari block third-party cookies, so a cookie-based refresh would break for many users. So I store both tokens in localStorage and reduce the risk: a 15-minute access token, rotation with reuse detection, hashed storage, server-side revocation, and avoiding XSS (React escapes output, and we never use <code>dangerouslySetInnerHTML</code>). With a custom domain where the API is a subdomain, I'd move the refresh token to an httpOnly SameSite cookie."</p></div>
+  <div class="box ours"><span class="lbl">Files</span><p style="font-weight:400"><code>server/utils/tokens.js</code> (issue, rotate, revoke) · <code>server/models/RefreshToken.model.js</code> · <code>server/middlewares/isAuth.js</code> (<code>TOKEN_EXPIRED</code>) · <code>client/src/api/axios.js</code> (interceptors, <code>refreshSession</code>) · <code>client/src/context/UserContext.jsx</code>. Settings: <code>ACCESS_TOKEN_TTL</code> (default 15m), <code>REFRESH_TOKEN_DAYS</code> (default 30).</p></div>
+</section>
+
+<section>
+  <h2><span class="num">16</span>Roles and protected routes</h2>
+  <div class="box def"><span class="lbl">Definition — RBAC</span><p>Role-Based Access Control grants permissions to roles (student, instructor) rather than to individual users, and checks the role before allowing an action.</p></div>
+<pre><span class="c">// middlewares/isAuth.js (simplified)</span>
+<span class="k">export const</span> isAuth = <span class="k">async</span> (req, res, next) => {
+  <span class="k">const</span> token = req.headers.token;                         <span class="c">// or "Authorization: Bearer …"</span>
+  <span class="k">if</span> (!token) <span class="k">return</span> res.status(401).json({ message: <span class="s">"Please log in to continue"</span> });
+  <span class="k">const</span> decoded = jwt.verify(token, process.env.JWT_SECRET_KEY); <span class="c">// throws if tampered/expired</span>
+  req.user = <span class="k">await</span> User.findById(decoded._id).select(<span class="s">"-password"</span>);
+  next();
+};
+<span class="k">export const</span> isAdmin = (req, res, next) =>
+  req.user.role !== <span class="s">"admin"</span> ? res.status(403).json({ message: <span class="s">"Only instructors can do this"</span> }) : next();</pre>
+  <div class="box tip"><span class="lbl">Interview tip — the role is in the token; why load the user from the DB?</span><p style="font-weight:400">So that a deleted account stops working immediately, and the role always comes from the database rather than from an old token.</p></div>
+
+  <h2><span class="num">17</span>Google sign-in (OAuth 2.0)</h2>
+  <div class="box def"><span class="lbl">Definition — OAuth 2.0</span><p>OAuth 2.0 is an authorization framework that lets an application get limited access to a user's account on another service (Google) without ever seeing their password. We use the <b>Authorization Code flow</b>: Google gives our server a short-lived code, which the server exchanges, using its client secret, for the user's profile.</p></div>
+  <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">Instead of creating a password with us, the user tells Google "please confirm to LMS who I am". Google sends the user back to us with a one-time ticket (the code), and our server swaps the ticket with Google for the user's name and email. We never see their Google password.</p></div>
+  <div class="flow"><div class="ft">"Continue with Google"</div>
+    <div class="step"><span class="n">1</span><span class="who">Browser</span><span class="what">Clicks the button → <code>GET /auth/google</code> on our API.</span></div>
+    <div class="step"><span class="n">2</span><span class="who">Server (Passport)</span><span class="what">Redirects to Google's consent page with our client id, scopes (<code>profile email</code>) and the <code>redirect_uri</code>.</span></div>
+    <div class="step"><span class="n">3</span><span class="who">Google</span><span class="what">The user picks an account → Google redirects to <code>/auth/google/callback?code=…</code></span></div>
+    <div class="step"><span class="n">4</span><span class="who">Server</span><span class="what">Exchanges the code + <code>GOOGLE_CLIENT_SECRET</code> for the profile. Finds the user by <code>googleId</code> or email (linking an existing account), or creates one.</span></div>
+    <div class="step"><span class="n">5</span><span class="who">Server</span><span class="what">Issues our own access + refresh tokens and redirects to <code>CLIENT_URL/auth-success#token=…&amp;refreshToken=…</code></span></div>
+    <div class="step"><span class="n">6</span><span class="who">React</span><span class="what"><code>AuthSuccess</code> reads the tokens from the <b>#fragment</b>, saves them, removes them from the address bar, and sends the user to their dashboard.</span></div>
+  </div>
+  <div class="box tip"><span class="lbl">Why the # fragment?</span><p style="font-weight:400">Browsers never send the part after <code>#</code> to any server, so the tokens don't end up in Netlify's or anyone's access logs.</p></div>
+  <div class="box warn"><span class="lbl">The OAuth errors we had in production</span><ul style="font-weight:400">
+    <li><b>redirect_uri_mismatch</b>: the callback URL in Google Cloud must match <code>GOOGLE_CALLBACK_URL</code> exactly (https, same path, no trailing slash).</li>
+    <li>The server crashed at startup when the Google keys were missing. Now the strategy is created per request, and a missing setup redirects to <code>/login?err=google_not_configured</code>.</li>
+    <li>"Access blocked" for other users: the consent screen was in <b>Testing</b> mode. Publish it.</li>
+    <li>Password login on a Google-only account crashed (no password to compare). Now it returns a clear message.</li>
+  </ul></div>
+
+  <h2><span class="num">18</span>Forgot and reset password</h2>
+  <div class="flow"><div class="ft">Reset flow</div>
+    <div class="step"><span class="n">1</span><span class="who">Browser</span><span class="what">POST <code>/api/user/forgot</code> {email}</span></div>
+    <div class="step"><span class="n">2</span><span class="who">Server</span><span class="what">Signs a JWT {email} with <code>FORGOT_SECRET_KEY</code> (15 min), emails the link <code>CLIENT_URL/reset-password/&lt;token&gt;</code>, and stores <code>resetPasswordExpire</code> on the user.</span></div>
+    <div class="step"><span class="n">3</span><span class="who">Browser</span><span class="what">The user opens the link, enters a new password → POST <code>/api/user/reset</code></span></div>
+    <div class="step"><span class="n">4</span><span class="who">Server</span><span class="what">Verifies the JWT and that <code>resetPasswordExpire</code> is still set and in the future, hashes the new password, <b>clears</b> <code>resetPasswordExpire</code> (so the link works only once) and revokes all sessions.</span></div>
+  </div>
+  <div class="box tip"><span class="lbl">Why both a JWT and a DB field?</span><p style="font-weight:400">The JWT proves the link is genuine and not expired. The DB field makes it <b>single-use</b>: a JWT alone could be reused until it expires.</p></div>
+</section>
+
+<section>
+  <h2><span class="num">19</span>Email delivery</h2>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Definition — SMTP</span><p>Simple Mail Transfer Protocol: the standard protocol for sending email between servers, usually on ports 25, 465 (SSL) or 587 (STARTTLS).</p></div>
+    <div class="box def"><span class="lbl">Definition — HTTPS email API</span><p>Sending email by making an ordinary HTTPS request (port 443) to a provider's REST API, which then delivers the message.</p></div>
+  </div>
+  <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">SMTP is walking into the post office through the special "mail" door. An HTTPS API is submitting the letter through the post office's website. Same result, different door. Render's free plan <b>locks the mail door</b> (it blocks SMTP ports to stop spam), but the web door (443) is always open.</p></div>
+  <h3>What we tried, and why each failed</h3>
+  <table class="avoid">
+    <thead><tr><th style="width:24%">Attempt</th><th>What happened</th></tr></thead>
+    <tr><td>Gmail via nodemailer (SMTP)</td><td>Worked on the laptop, but on Render the connection was silently dropped. With no timeout, signup spun forever.</td></tr>
+    <tr><td>Brevo (HTTPS API)</td><td>The network was fine, but Brevo rejected the key ("API Key is not enabled") and the Gmail sender wasn't verified.</td></tr>
+    <tr><td>Resend (HTTPS API)</td><td>Without a verified domain it sends only to the account owner's own address.</td></tr>
+  </table>
+  <h3>What we do now: a Gmail relay through Google Apps Script</h3>
+  <div class="box def"><span class="lbl">Definition — Google Apps Script</span><p>A cloud JavaScript platform from Google that runs scripts inside your Google account, can use Gmail (<code>MailApp.sendEmail</code>), and can be deployed as a web app with a public HTTPS URL.</p></div>
+  <div class="flow"><div class="ft">Sending a signup code</div>
+    <div class="step"><span class="n">1</span><span class="who">Our server</span><span class="what">POSTs JSON {secret, to, subject, html} to the Apps Script <code>/exec</code> URL over HTTPS, so no SMTP is involved.</span></div>
+    <div class="step"><span class="n">2</span><span class="who">Apps Script</span><span class="what">Checks that the shared secret matches (so strangers can't use it to send spam), then calls <code>MailApp.sendEmail</code>.</span></div>
+    <div class="step"><span class="n">3</span><span class="who">Gmail</span><span class="what">Delivers the email from <b>your real Gmail address</b>, so it lands in the inbox and needs no domain verification.</span></div>
+    <div class="step"><span class="n">4</span><span class="who">Our server</span><span class="what">Reads <code>{ ok: true }</code>. On failure it tries the next configured provider.</span></div>
+  </div>
+  <div class="box ours"><span class="lbl">In our project — <code>middlewares/sendMail.js</code></span><ul style="font-weight:400">
+    <li><b>Fallback chain:</b> Gmail script → Brevo → Resend → (SMTP only locally). The first one that succeeds wins.</li>
+    <li><b>15-second timeout</b> on every provider (<code>AbortController</code>), so a request can never hang.</li>
+    <li>A failure returns <b>502</b> with a friendly message. <code>EMAIL_OTP_FALLBACK=true</code> is an emergency switch that shows the code on screen; keep it off in production.</li>
+    <li>User-supplied text is <b>HTML-escaped</b> in templates (prevents HTML injection into emails).</li>
+    <li>Limit: about 100 emails a day on a free Gmail account.</li>
+  </ul></div>
+  <div class="box tip"><span class="lbl">Interview tip — "Why did SMTP fail in production but work locally?"</span><p style="font-weight:400">"Render's free tier blocks outbound SMTP ports to prevent abuse. Locally there's no such block. I moved email to HTTPS, which is never blocked, and added timeouts and a provider fallback so a single provider outage can't break signup."</p></div>
+
+  <h2><span class="num">20</span>Payment gateway (Razorpay) <span class="tag adv">advanced</span></h2>
+  <div class="box def"><span class="lbl">Definition — payment gateway</span><p>A service that securely collects payment details (card, UPI, net banking), processes the payment with banks, and tells the merchant the result, so the merchant never handles raw card data.</p></div>
+  <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">Razorpay is a trusted cashier standing between the student and the bank. Our app only says "please collect ₹1,999 for order #123". The student pays inside Razorpay's own popup. Razorpay then hands back a receipt with a <b>tamper-proof stamp</b> (the signature), and our server checks the stamp before unlocking the course.</p></div>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Definition — order</span><p>A server-created record of the amount to collect (in paise), currency and notes. The payment must be made against this order id.</p></div>
+    <div class="box def"><span class="lbl">Definition — HMAC signature</span><p>A hash-based message authentication code: <code>HMAC_SHA256(order_id + "|" + payment_id, key_secret)</code>. Only someone with the secret can produce it.</p></div>
+  </div>
+  <div class="flow"><div class="ft">Buying a paid course</div>
+    <div class="step"><span class="n">1</span><span class="who">Browser</span><span class="what">Clicks "Enroll" → POST <code>/api/course/checkout/:id</code></span></div>
+    <div class="step"><span class="n">2</span><span class="who">Server</span><span class="what">Checks the course exists and the user isn't the owner or already enrolled. A <b>free course is enrolled immediately</b>. Otherwise it creates a Razorpay order: <code>amount = price × 100</code> (paise), with notes {courseId, userId}, and returns {order, key_id}.</span></div>
+    <div class="step"><span class="n">3</span><span class="who">Browser</span><span class="what">Loads Razorpay's checkout script <b>on demand</b> and opens the popup with the order id and the <b>public</b> key id.</span></div>
+    <div class="step"><span class="n">4</span><span class="who">Razorpay</span><span class="what">The student pays. The <code>handler</code> callback receives <code>razorpay_order_id, razorpay_payment_id, razorpay_signature</code>.</span></div>
+    <div class="step"><span class="n">5</span><span class="who">Server</span><span class="what">POST <code>/api/verification/:id</code> recomputes the HMAC with <code>RAZORPAY_KEY_SECRET</code>. If it doesn't match: 400.</span></div>
+    <div class="step"><span class="n">6</span><span class="who">Server</span><span class="what">Fetches the order from Razorpay and checks that <code>notes.courseId</code> and <code>notes.userId</code> match <b>this</b> course and user.</span></div>
+    <div class="step"><span class="n">7</span><span class="who">Server</span><span class="what">Saves the Payment with an <b>idempotent upsert</b> (<code>$setOnInsert</code> keyed on the unique payment id) and adds the course to <code>user.subscription</code> once → the success page.</span></div>
+  </div>
+  <div class="box warn"><span class="lbl">Security fix we made — a replay attack</span><p style="font-weight:400">The signature proves only that "this payment belongs to this order". It says nothing about <i>which course</i>. Before the fix, a student could pay ₹500 for a cheap course and send that valid proof to the <code>/verification</code> URL of a ₹2,499 course, getting it free. Step 6 closes this: the order's notes must match the course in the URL. (Tested in Razorpay test mode: the replay is rejected with 400, and the genuine payment still enrolls.)</p></div>
+  <div class="box tip"><span class="lbl">Interview tip — key terms to use</span><ul style="font-weight:400">
+    <li><b>Never trust the client</b>: the amount comes from the database, not from the browser, and success is decided by the server's signature check.</li>
+    <li><b>Key id vs key secret</b>: the id is public (sent to the browser); the secret stays on the server.</li>
+    <li><b>Idempotency</b>: processing the same payment twice has the same effect as once (unique index + upsert + "already enrolled" check).</li>
+    <li><b>Test vs live keys</b>: <code>rzp_test_…</code> keys move no real money; use test cards in development.</li>
+    <li><b>Webhooks</b> (an improvement): Razorpay can call our server directly when a payment is captured, which covers the case where the user closes the tab before step 5.</li>
+  </ul></div>
+</section>
+
+<section>
+  <h2><span class="num">21</span>File uploads (Multer + Cloudinary)</h2>
+  <div class="box def"><span class="lbl">Definition — multipart/form-data</span><p>The HTTP request encoding used to send files together with form fields. Multer is the Express middleware that parses it.</p></div>
+  <div class="flow"><div class="ft">Instructor uploads a lecture video</div>
+    <div class="step"><span class="n">1</span><span class="who">Browser</span><span class="what">Sends <code>FormData</code> (title, description, file) with an <b>upload progress bar</b> (axios <code>onUploadProgress</code>).</span></div>
+    <div class="step"><span class="n">2</span><span class="who">Multer</span><span class="what">Accepts only image/video types, enforces a size limit (<code>MAX_UPLOAD_MB</code>, default 200) and writes a temporary file with a random UUID name.</span></div>
+    <div class="step"><span class="n">3</span><span class="who">storage.js</span><span class="what">If <code>CLOUDINARY_URL</code> is set: uploads to Cloudinary (large videos in chunks), saves the <code>https://</code> URL, and deletes the temp file. Otherwise keeps <code>uploads/&lt;file&gt;</code> on disk.</span></div>
+    <div class="step"><span class="n">4</span><span class="who">On delete</span><span class="what">Deleting a lecture or course also deletes its files. A file that's already gone never crashes the request.</span></div>
+  </div>
+  <div class="box simple"><span class="lbl">Why Cloudinary?</span><p style="font-weight:400">Render's free server has an <b>ephemeral disk</b>: every deploy or restart wipes it, so uploaded videos vanished. Cloudinary stores them permanently and serves them through a fast CDN.</p></div>
+  <div class="box def"><span class="lbl">Definition — ephemeral filesystem</span><p>Storage that doesn't persist across restarts or deploys. Common on cloud platforms, which is why apps store files in object storage (Cloudinary, S3) instead.</p></div>
+
+  <h2><span class="num">22</span>AI tutor (Gemini + Socket.IO)</h2>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Definition — WebSocket</span><p>A protocol that keeps one connection open so the client and server can both send messages at any time (full-duplex), unlike HTTP's one-request-one-response.</p></div>
+    <div class="box def"><span class="lbl">Definition — LLM</span><p>A Large Language Model is an AI model trained on huge amounts of text that generates text answers from a prompt. We use Google Gemini through the <code>@google/genai</code> SDK.</p></div>
+  </div>
+  <div class="box simple"><span class="lbl">In simple words</span><p style="font-weight:400">HTTP is like sending letters: you write, wait, and get one reply. A WebSocket is a phone call: the line stays open and either side can talk. That suits a chat.</p></div>
+  <div class="flow"><div class="ft">One chat message</div>
+    <div class="step"><span class="n">1</span><span class="who">Browser</span><span class="what">Opens the socket with <code>auth: { token }</code>. The server's <code>io.use()</code> verifies the JWT before accepting the connection.</span></div>
+    <div class="step"><span class="n">2</span><span class="who">Browser</span><span class="what"><code>socket.emit("ai-message", text)</code></span></div>
+    <div class="step"><span class="n">3</span><span class="who">Server</span><span class="what">Adds the message to <b>this connection's own history</b> (capped at 20 messages and 4,000 characters), and a <code>busy</code> flag stops overlapping requests.</span></div>
+    <div class="step"><span class="n">4</span><span class="who">ai.service.js</span><span class="what">Calls Gemini with a tutor system prompt. Tries the models in order with a <b>25-second timeout</b> each, falling back to the next model if one is down or retired.</span></div>
+    <div class="step"><span class="n">5</span><span class="who">Server → Browser</span><span class="what"><code>emit("ai-message-response", reply)</code>. React renders it as Markdown (code blocks, lists).</span></div>
+  </div>
+  <div class="box warn"><span class="lbl">Bugs we fixed here</span><ul style="font-weight:400">
+    <li>All users <b>shared one chat history</b> (it was a global variable), so one student's conversation leaked into another's. Now each connection has its own.</li>
+    <li>Anyone could connect without logging in (and use up our Gemini quota). Now the token is required.</li>
+    <li><code>gemini-2.5-flash</code> was retired (404) and another model hung for 2 minutes. Fixed with a model fallback list and a timeout.</li>
+  </ul></div>
+
+  <h2><span class="num">23</span>Doubts (Q&amp;A with instructors)</h2>
+  <p>An enrolled student asks a doubt on a course (<code>POST /api/query/create/:courseId</code>). The course's instructor sees it in their inbox (<code>/api/query/instructor</code>) and replies (<code>PUT /api/query/status/:id</code>). The student sees the reply under "My doubts".</p>
+  <div class="box ours"><span class="lbl">Authorization rules (a common interview topic)</span><ul style="font-weight:400">
+    <li>Only <b>enrolled</b> students (or the owner) can ask on a course. Before the fix, anyone could.</li>
+    <li>Only <b>the instructor of that course</b> can reply. Before the fix, any logged-in user could answer any doubt.</li>
+  </ul></div>
+</section>
+
+<!-- ============================== PART D ============================== -->
+<section class="page-break">
+  <h1 class="part">Part D — Security and production</h1>
+  <div class="part-sub">What protects the app, how it's deployed, and the real problems we solved.</div>
+
+  <h2><span class="num">24</span>Security measures</h2>
+  <table>
+    <thead><tr><th style="width:22%">Threat / concept</th><th style="width:38%">Definition</th><th>Our protection</th></tr></thead>
+    <tr><td><b>CORS</b></td><td>Cross-Origin Resource Sharing: a browser rule that blocks a page from reading responses from another origin unless that server allows it.</td><td>Only the origins in <code>CLIENT_URL</code> are allowed (plus localhost in development).</td></tr>
+    <tr><td><b>Secure headers</b></td><td>HTTP headers that switch on browser protections.</td><td><code>helmet()</code>, with Cross-Origin-Resource-Policy set to <code>cross-origin</code> so our own frontend can load images.</td></tr>
+    <tr><td><b>Brute force</b></td><td>Guessing passwords or OTPs with many attempts.</td><td>Rate limiting: 30 requests per 15 minutes on login, register, verify, forgot and reset; slow bcrypt hashing.</td></tr>
+    <tr><td><b>XSS</b></td><td>Cross-Site Scripting: injecting malicious JavaScript into pages other users view.</td><td>React escapes output by default; AI Markdown is rendered without raw HTML; email templates escape user input.</td></tr>
+    <tr><td><b>CSRF</b></td><td>Cross-Site Request Forgery: tricking a logged-in browser into sending unwanted requests using its cookies.</td><td>We authenticate with a header token, not cookies, and browsers don't attach headers automatically, so CSRF doesn't apply.</td></tr>
+    <tr><td><b>Injection</b></td><td>Sending query operators or bad ids to manipulate database queries.</td><td>Ids are validated (<code>ObjectId.isValid</code>), inputs are cast to strings, and Mongoose validates against the schema.</td></tr>
+    <tr><td><b>Secret leaks</b></td><td>API keys or passwords exposed in code or the browser.</td><td>All secrets live in environment variables on Render; <code>.env</code> is git-ignored; <code>/health</code> shows only "configured: yes/no".</td></tr>
+    <tr><td><b>Data exposure</b></td><td>Returning more data than needed.</td><td>Password hashes are removed from every response (<code>publicUser</code>, <code>select("-password")</code>).</td></tr>
+    <tr><td><b>Large payloads</b></td><td>Overloading the server with huge requests.</td><td>A 1 MB JSON limit and a file size limit on uploads.</td></tr>
+  </table>
+
+  <h2><span class="num">25</span>Deployment: Netlify, Render, Atlas</h2>
+  <table class="avoid">
+    <thead><tr><th style="width:18%">Piece</th><th style="width:38%">URL / place</th><th>Notes</th></tr></thead>
+    <tr><td>Frontend</td><td>learningsytemclient.netlify.app</td><td>Netlify builds with <code>npm run build</code> and serves <code>dist/</code>. <code>public/_redirects</code> sends every path to <code>index.html</code> (SPA routing).</td></tr>
+    <tr><td>Backend</td><td>learningmanagementserver.onrender.com</td><td>Render runs <code>npm start</code>; the health check is <code>/health</code>; secrets live in the Environment tab.</td></tr>
+    <tr><td>Database</td><td>MongoDB Atlas cluster, database <code>lms</code></td><td>Network Access must allow <code>0.0.0.0/0</code>, because Render's IP addresses change.</td></tr>
+    <tr><td>Code</td><td>GitHub → auto-deploy</td><td>A push to <code>main</code> redeploys both sites.</td></tr>
+  </table>
+  <div class="box def"><span class="lbl">Definition — environment variables</span><p>Configuration values supplied by the hosting environment at runtime (not stored in code), used for secrets and settings that differ between development and production.</p></div>
+  <div class="box def"><span class="lbl">Definition — cold start</span><p>The delay when a sleeping server is woken by its first request. Render's free tier sleeps after about 15 minutes idle and takes 30–60 seconds to wake.</p></div>
+  <div class="box ours"><span class="lbl">How we handle the cold start</span><p style="font-weight:400">Axios uses a 90-second timeout and shows "Waking up the server…" when a request takes over 5 seconds, instead of failing with an error.</p></div>
+  <div class="box def"><span class="lbl">Definition — health check endpoint</span><p>A lightweight URL that reports whether the service and its dependencies (like the database) are working, used by hosting platforms and humans to monitor the app.</p></div>
+</section>
+
+<section>
+  <h2><span class="num">26</span>Problems we hit and how we fixed them</h2>
+  <p>Interviewers love "tell me about a bug you fixed". Use the <b>STAR</b> format: <b>S</b>ituation, <b>T</b>ask, <b>A</b>ction, <b>R</b>esult.</p>
+  <table>
+    <thead><tr><th style="width:27%">Problem (symptom)</th><th style="width:33%">Root cause</th><th>Fix</th></tr></thead>
+    <tr><td>Signup emails never arrived; requests hung</td><td>Render's free plan blocks SMTP; no timeout</td><td>HTTPS email via a Gmail Apps Script, a 15s timeout and a provider fallback chain</td></tr>
+    <tr><td>Brevo emails rejected</td><td>API key disabled; sender not verified</td><td>No longer required: Gmail relay first, Brevo as backup</td></tr>
+    <tr><td>Images and videos didn't load on the live site</td><td>helmet's default CORP header blocked cross-origin loading</td><td><code>crossOriginResourcePolicy: "cross-origin"</code></td></tr>
+    <tr><td>Uploaded files disappeared</td><td>Render's ephemeral disk</td><td>Cloudinary storage</td></tr>
+    <tr><td>Server crashed on startup</td><td>Google strategy built at import time without keys; a circular import for Razorpay</td><td>Strategy created per request; a separate <code>config/razorpay.js</code></td></tr>
+    <tr><td>Settings missing at startup</td><td>ES module imports run before <code>dotenv.config()</code></td><td><code>import "dotenv/config"</code> first, in <code>config/config.js</code></td></tr>
+    <tr><td>Whole site broken: "database disconnected"</td><td>The Atlas cluster was paused; its address returned NXDOMAIN</td><td>Resumed the cluster; added <code>/lms</code> to the connection string (it was landing in the empty <code>test</code> database)</td></tr>
+    <tr><td>Frontend called <code>localhost:8080</code> in production</td><td>A committed <code>.env</code> overrode the production URL</td><td>Production URL restored, plus a code fallback to the Render URL</td></tr>
+    <tr><td>AI chats leaked between users</td><td>One global history array</td><td>Per-socket history, and socket authentication</td></tr>
+    <tr><td>Anyone could answer any doubt</td><td>No ownership check</td><td>Only the course's instructor can reply</td></tr>
+    <tr><td>Paid courses could be unlocked with a cheap payment</td><td>Signature verified, but the order wasn't tied to the course</td><td>The order's notes must match the course and user</td></tr>
+    <tr><td>Users stayed logged in after a password change</td><td>Stateless 7-day JWT</td><td>Access + rotating refresh tokens, revoked on password change</td></tr>
+    <tr><td>Mixed-case emails couldn't log in</td><td>Exact-match lookup</td><td>Normalise to lowercase + case-insensitive collation</td></tr>
+    <tr><td>Bad ids crashed with 500</td><td>CastError not handled</td><td>Id validation + the global error handler returns 400</td></tr>
+  </table>
+  <div class="box say"><span class="lbl">Example STAR answer</span><p style="font-weight:400"><b>S:</b> After deploying, signup worked locally but hung in production. <b>T:</b> I had to find out why emails weren't sending. <b>A:</b> I checked each layer and found that Render's free tier blocks outbound SMTP ports. I switched email to HTTPS through a Google Apps Script relay, added a 15-second timeout and a fallback chain across providers, and returned a clear 502 instead of hanging. <b>R:</b> Signup emails send reliably from the user's Gmail, and a single provider failure no longer breaks signup.</p></div>
+</section>
+
+<!-- ============================== PART E ============================== -->
+<section class="page-break">
+  <h1 class="part">Part E — Interview preparation</h1>
+  <div class="part-sub">Scripts to present the project, and the questions you're most likely to get.</div>
+
+  <h2><span class="num">27</span>How to present the project</h2>
+  <div class="box say"><span class="lbl">3-minute walkthrough (follow this order)</span><ol style="font-weight:400">
+    <li><b>Problem and users</b>: "An online course platform with two roles: instructors publish courses, students learn."</li>
+    <li><b>Architecture</b>: "React on Netlify talks to an Express API on Render over HTTPS with JSON; data in MongoDB Atlas; uploads on Cloudinary."</li>
+    <li><b>Auth</b>: "Email OTP at signup, bcrypt hashing, 15-minute JWT access tokens with rotating refresh tokens and reuse detection, plus Google OAuth."</li>
+    <li><b>Payments</b>: "Razorpay orders created on the server; the server verifies the HMAC signature, checks the order belongs to that course, and enrolls idempotently."</li>
+    <li><b>Real-time AI</b>: "A Gemini tutor over authenticated Socket.IO, with per-user history and model fallback."</li>
+    <li><b>Production lessons</b>: "SMTP blocked on Render → HTTPS email; ephemeral disk → Cloudinary; cold starts → a wake-up message; a security review found and fixed a payment replay bug."</li>
+  </ol></div>
+
+  <h2><span class="num">28</span>Interview questions with answers</h2>
+
+  <h3>Basics</h3>
+  <div class="qa"><div class="q">What is the MERN stack?</div><div class="a">MongoDB (database), Express (backend framework), React (frontend library), Node.js (JavaScript runtime). One language, JavaScript, end to end.</div></div>
+  <div class="qa"><div class="q">What is middleware in Express? Give an example from your project.</div><div class="a">A function with <code>(req, res, next)</code> that runs before the route handler. For example <code>isAuth</code> verifies the JWT and sets <code>req.user</code>; <code>isAdmin</code> blocks non-instructors with 403; Multer parses uploads.</div></div>
+  <div class="qa"><div class="q">Difference between authentication and authorization?</div><div class="a">Authentication verifies identity (who you are: password, OTP, Google). Authorization checks permissions (what you can do: instructor-only routes, ownership checks).</div></div>
+  <div class="qa"><div class="q">How do you store passwords?</div><div class="a">Hashed with bcrypt (salted, cost factor 10). Never stored or returned in plain text; login uses <code>bcrypt.compare</code>.</div></div>
+  <div class="qa"><div class="q">What is CORS and why did you need it?</div><div class="a">A browser security rule blocking cross-origin responses unless the server allows them. Our frontend (Netlify) and API (Render) are different origins, so the API explicitly allows our frontend URL.</div></div>
+  <div class="qa"><div class="q">What's the difference between PUT and POST?</div><div class="a">POST creates (or performs an action, like checkout); PUT updates or replaces an existing resource, like <code>PUT /api/course/:id</code> to edit a course. PUT is meant to be idempotent.</div></div>
+
+  <h3>Auth and tokens</h3>
+  <div class="qa"><div class="q">What is a JWT made of? Is the payload encrypted?</div><div class="a">Header, payload and signature, each Base64URL-encoded. The payload is only encoded, not encrypted, so anyone can read it. The signature only prevents tampering. Never put secrets in it.</div></div>
+  <div class="qa"><div class="q">Why both an access token and a refresh token?</div><div class="a">A short access token limits damage if it's stolen and needs no DB lookup. A long refresh token, stored hashed in the DB, keeps the user logged in and can be revoked: logout, password change and theft detection all become possible.</div></div>
+  <div class="qa"><div class="q">What is refresh token rotation and reuse detection?</div><div class="a">Each refresh returns a new refresh token and retires the old one. If a retired token is used again, it means a copy exists, so we revoke the whole token family and force a re-login.</div></div>
+  <div class="qa"><div class="q">How does the frontend refresh tokens without the user noticing?</div><div class="a">An axios response interceptor catches a 401 <code>TOKEN_EXPIRED</code>, calls <code>/refresh</code> once (shared by all failing requests, and locked across tabs), saves the new tokens and replays the original request.</div></div>
+  <div class="qa"><div class="q">Where do you store tokens and what are the risks?</div><div class="a">localStorage, because the frontend and API are on different sites and third-party cookies are blocked in some browsers. The XSS risk is reduced by short access tokens, rotation, reuse detection, server-side revocation and safe rendering. With a shared domain I'd use an httpOnly SameSite cookie for the refresh token.</div></div>
+  <div class="qa"><div class="q">How does Google login work in your app?</div><div class="a">OAuth 2.0 Authorization Code flow with Passport: redirect to Google, Google returns a code to our callback, the server exchanges it (with the client secret) for the profile, finds or creates the user, issues our own tokens, and redirects to the frontend with the tokens in the URL fragment.</div></div>
+  <div class="qa"><div class="q">How does email verification work without saving unverified users?</div><div class="a">The pending user (hashed password, role) and the OTP are placed in a signed JWT valid for 15 minutes. The account is created only when <code>/verify</code> receives a matching OTP and a valid token.</div></div>
+
+  <h3>Payments</h3>
+  <div class="qa"><div class="q">Walk me through the Razorpay flow.</div><div class="a">The server creates an order (amount from the DB, in paise) → the browser opens Razorpay checkout with the order id and public key → Razorpay returns order_id, payment_id and signature → the server verifies <code>HMAC_SHA256(order_id|payment_id, secret)</code>, checks the order's notes match the course and user, saves the payment idempotently and enrolls.</div></div>
+  <div class="qa"><div class="q">Why verify on the server? Why not trust the success callback?</div><div class="a">Anything in the browser can be faked. Only the server knows the key secret, so only the server can confirm the signature is genuine.</div></div>
+  <div class="qa"><div class="q">What is idempotency and how did you achieve it?</div><div class="a">Repeating an operation has the same effect as doing it once. A unique index on <code>razorpay_payment_id</code>, an upsert with <code>$setOnInsert</code>, and an "already enrolled" check mean a double submit doesn't create duplicates.</div></div>
+  <div class="qa"><div class="q">What security issue did you find in payments?</div><div class="a">The signature check didn't tie the payment to a course, so a cheap course's payment could unlock an expensive one. I now fetch the order from Razorpay and require its notes to match the course and user.</div></div>
+
+  <h3>Real-time, files and deployment</h3>
+  <div class="qa"><div class="q">Why WebSockets for the AI chat?</div><div class="a">A persistent two-way connection suits a chat: it's low latency, there's no repeated handshake, and the server can push the reply when Gemini finishes. Socket.IO adds reconnection and fallbacks.</div></div>
+  <div class="qa"><div class="q">How do you authenticate a socket?</div><div class="a">The client sends the access token in the handshake (<code>auth.token</code>); <code>io.use()</code> verifies it before the connection is accepted. An expired token returns <code>token_expired</code>, and the client refreshes and reconnects.</div></div>
+  <div class="qa"><div class="q">Why Cloudinary instead of saving files on the server?</div><div class="a">Render's disk is ephemeral (wiped on restart or deploy). Cloudinary gives permanent storage plus CDN delivery and video handling.</div></div>
+  <div class="qa"><div class="q">Your API was down in production. How did you debug it?</div><div class="a">I checked <code>/health</code> (database disconnected), tested endpoints (DB queries failing after 10 seconds), then resolved the Atlas hostname with public DNS (NXDOMAIN, meaning the cluster was paused). After it was resumed, the data was in the <code>lms</code> database but the connection string defaulted to <code>test</code>. Adding <code>/lms</code> fixed it.</div></div>
+  <div class="qa"><div class="q">What happens when the free Render server is asleep?</div><div class="a">The first request takes 30–60 seconds (cold start). The frontend uses a long timeout and shows a "waking up the server" message instead of an error.</div></div>
+</section>
+
+<section>
+  <h2><span class="num">29</span>What I would improve next</h2>
+  <div class="box tip"><span class="lbl">Good answer to "What would you do with more time?"</span><ul style="font-weight:400">
+    <li><b>Razorpay webhooks</b>: confirm payments server-to-server even if the user closes the tab.</li>
+    <li><b>httpOnly cookie for the refresh token</b>: put the API on a subdomain of the frontend's domain.</li>
+    <li><b>Automated tests</b>: Jest + Supertest for the API (auth, payments), Playwright for UI flows.</li>
+    <li><b>Video streaming</b>: HLS adaptive streaming via Cloudinary, and signed URLs so only enrolled students can fetch videos.</li>
+    <li><b>Progress on the server</b>: lecture progress is in localStorage today; storing it in MongoDB would sync it across devices.</li>
+    <li><b>OTP hardening</b>: store only a hash of the OTP and limit verification attempts.</li>
+    <li><b>Observability</b>: structured logs and error tracking (e.g. Sentry), and uptime alerts on <code>/health</code>.</li>
+    <li><b>Paid hosting / custom domain</b>: no cold starts, and a branded email domain for deliverability.</li>
+  </ul></div>
+
+  <h2><span class="num">30</span>Glossary</h2>
+  <table>
+    <thead><tr><th style="width:24%">Term</th><th>Meaning</th></tr></thead>
+    <tr><td>API</td><td>Application Programming Interface: a defined way for programs to talk to each other.</td></tr>
+    <tr><td>Endpoint</td><td>A specific URL + method the API responds to, e.g. <code>POST /api/user/login</code>.</td></tr>
+    <tr><td>Payload / body</td><td>The data sent in a request or response (JSON here).</td></tr>
+    <tr><td>Header</td><td>Metadata on a request or response, e.g. our <code>token</code> header.</td></tr>
+    <tr><td>Stateless</td><td>The server keeps no memory of past requests; each request is self-contained.</td></tr>
+    <tr><td>Hash / salt</td><td>One-way fingerprint of data / random value added before hashing.</td></tr>
+    <tr><td>HMAC</td><td>A hash combined with a secret key, proving both integrity and authenticity.</td></tr>
+    <tr><td>JWT claims</td><td>The fields inside a JWT payload (<code>_id</code>, <code>role</code>, <code>iat</code> issued-at, <code>exp</code> expiry).</td></tr>
+    <tr><td>Token rotation</td><td>Replacing a refresh token with a new one on every use.</td></tr>
+    <tr><td>Revocation</td><td>Invalidating a credential before its natural expiry.</td></tr>
+    <tr><td>OAuth scope</td><td>The permissions requested from the provider (we request <code>profile</code> and <code>email</code>).</td></tr>
+    <tr><td>Callback / redirect URI</td><td>Where the provider sends the user back after login.</td></tr>
+    <tr><td>Idempotent</td><td>Doing it twice has the same result as doing it once.</td></tr>
+    <tr><td>Upsert</td><td>Update if it exists, insert if it doesn't (one database operation).</td></tr>
+    <tr><td>TTL index</td><td>A MongoDB index that deletes documents automatically after a time.</td></tr>
+    <tr><td>Rate limiting</td><td>Capping how many requests a client can make in a time window.</td></tr>
+    <tr><td>CDN</td><td>Content Delivery Network: servers worldwide that deliver files from a location near the user.</td></tr>
+    <tr><td>SPA</td><td>Single Page Application: one HTML page; JavaScript switches views without full reloads.</td></tr>
+    <tr><td>Interceptor</td><td>Axios hook that runs on every request or response.</td></tr>
+    <tr><td>Cold start</td><td>The wake-up delay of a sleeping server.</td></tr>
+    <tr><td>Ephemeral disk</td><td>Storage that's wiped on restart or deploy.</td></tr>
+    <tr><td>NXDOMAIN</td><td>DNS answer meaning "this domain name doesn't exist".</td></tr>
+    <tr><td>Environment variable</td><td>A config value provided by the host at runtime, used for secrets.</td></tr>
+    <tr><td>Paise</td><td>1/100 of a rupee; Razorpay amounts are in paise (₹1,999 → 199900).</td></tr>
+  </table>
+  <p class="small" style="margin-top:14pt">This guide describes the code as it is in this repository. File names and settings referenced here match the project, so you can open the file while you study each section.</p>
+</section>
+
+</body>
+</html>

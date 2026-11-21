@@ -44,7 +44,7 @@ After deploying, open **`https://<your-api>.onrender.com/health`**. It shows the
 | `MONGODB_URI` | Atlas connection string. In Atlas → Network Access, allow `0.0.0.0/0` |
 | `JWT_SECRET_KEY`, `ACTIVATION_SECRET`, `FORGOT_SECRET_KEY` | long random strings |
 | `CLIENT_URL` | `https://learningsytemclient.netlify.app` (no trailing slash; comma-separate several) |
-| `BREVO_API_KEY`, `EMAIL_FROM` | see step 2 |
+| `GMAIL_SCRIPT_URL`, `GMAIL_SCRIPT_SECRET` | see step 2 |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL` | see step 3 |
 | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` | test or live keys |
 | `CLOUDINARY_URL` | see step 4 |
@@ -54,14 +54,15 @@ Render does **not** read `server/.env`. Every value has to be added in the Rende
 
 ### 2. Email (signup codes and password reset)
 
-Render's free plan **blocks SMTP**, so Gmail/nodemailer cannot work there. The app sends email through Brevo's HTTPS API instead.
+Render's free plan **blocks SMTP**, so Gmail through nodemailer cannot work there. Brevo and Resend need a verified sender or domain. The app therefore sends through **your own Gmail via a Google Apps Script**, called over normal HTTPS, so no SMTP is involved.
 
-1. In Brevo → *SMTP & API → API Keys*, create a **new** key and make sure it is active. (The current key is rejected with "API Key is not enabled".) If Brevo asks you to activate your account or transactional sending, finish that first.
-2. In Brevo → *Senders, Domains & Dedicated IPs → Senders*, add the address you use as `EMAIL_FROM` and click the verification link Brevo emails you.
-3. For reliable inbox delivery, verify a domain you own and send from it. Mail sent through Brevo with a `@gmail.com` sender often lands in spam.
-4. Optional stopgap only: `EMAIL_OTP_FALLBACK=true` shows the signup code on screen when email fails. Leave it **off** for real users, because anyone could then sign up with any email address.
+1. Open [script.google.com](https://script.google.com), signed in to the Gmail account that should send the emails, and click **New project**.
+2. Paste the contents of [`server/scripts/gmail-relay.gs`](server/scripts/gmail-relay.gs), then set `SECRET` to a long random string (letters and numbers only).
+3. Click **Deploy → New deployment → Web app**. Set *Execute as* to **Me** and *Who has access* to **Anyone**, click **Deploy**, then click **Authorize access** and allow sending email. If Google says the app isn't verified, click *Advanced → Go to … (unsafe)*. It's your own script, so this warning is expected.
+4. Copy the Web app URL (it ends in `/exec`). Opening it in a browser should show `{"ok":true,...}`.
+5. On Render, set `GMAIL_SCRIPT_URL` to that URL and `GMAIL_SCRIPT_SECRET` to the same secret.
 
-Alternatives: `RESEND_API_KEY` (needs a verified domain) or `SMTP_*` (local development or paid hosting only).
+Limit: about 100 emails a day on a free Gmail account. Brevo or Resend still work as automatic backups if they're configured: every provider that's set is tried in order until one succeeds. `EMAIL_OTP_FALLBACK=true` (show the code on screen) is an emergency-only option.
 
 ### 3. Google sign-in
 
